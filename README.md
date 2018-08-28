@@ -8,9 +8,9 @@ This pipeline is to create SNP-weights that can be used in TWAS using FUSION. I 
 
 ### Required data
 
-1. 	Genetic data that has undergone standard quality control and imputation, and is in binary PLINK format (.bed/.bim/.fam).
-2. 	A file containing phenotypic data (gene expression, methylation, chromatin modification etc.) in PLINK format (e.g. FID, IID, gene1, gene2, gene3...). This data should have been corrected for covariates and normalised. An example has been provided ('Example_phenotype_file.txt').
-3. 	A file containing the coordinates of each feature (e.g. gene, methlyation site). For gene expression this could be start and stop coordinates. The file should be in the following order: Chromosome, start coordinate, end coordinate, and name of the feature (should match with phenotype columns names). The files should have a header but the column names will be ignored. An example has been provided ('Example_coordinate_file.txt').
+1. Genetic data that has undergone standard quality control and imputation, and is in binary PLINK format (.bed/.bim/.fam).
+2. A file containing phenotypic data (gene expression, methylation, chromatin modification etc.) in PLINK format (e.g. FID, IID, gene1, gene2, gene3...). This data should have been corrected for covariates and normalised. An example has been provided ('Example_phenotype_file.txt').
+3. A file containing the coordinates of each feature (e.g. gene, methlyation site). For gene expression this could be start and stop coordinates. The file should be in the following order: Chromosome, start coordinate, end coordinate, and name of the feature (should match with phenotype columns names). The files should have a header but the column names will be ignored. An example has been provided ('Example_coordinate_file.txt').
 
 
 
@@ -22,7 +22,7 @@ This pipeline is to create SNP-weights that can be used in TWAS using FUSION. I 
 
 * gcta_nr_robust - GCTA binary released by FUSION that enables robust non-linear optimization.
 
-* gemma.97.sh - GEMMA v0.97 binary in a wrapper that selects the correct compiler on ROCKS.
+* gemma.97.sh - GEMMA v0.97 binary in a wrapper that selects the correct compiler on ROCKS. NOTE: You may need to change the file path to the gemma binary so it can find the file regardless of the working directory. 
 
   
 
