@@ -10,29 +10,29 @@ This pipeline is to create SNP-weights that can be used in TWAS using FUSION. I 
 
 1. 	Genetic data that has undergone standard quality control and imputation, and is in binary PLINK format (.bed/.bim/.fam).
 2. 	A file containing phenotypic data (gene expression, methylation, chromatin modification etc.) in PLINK format (e.g. FID, IID, gene1, gene2, gene3...). This data should have been corrected for covariates and normalised. An example has been provided ('Example_phenotype_file.txt').
-
-	3. 	A file containing the coordinates of each feature (e.g. gene, methlyation site). For gene expression this could be start and stop coordinates. The file should be in the following order: Chromosome, start coordinate, end coordinate, and name of the feature (should match with phenotype columns names). The files should have a header but the column names will be ignored. An example has been provided ('Example_coordinate_file.txt').
-	
+3. 	A file containing the coordinates of each feature (e.g. gene, methlyation site). For gene expression this could be start and stop coordinates. The file should be in the following order: Chromosome, start coordinate, end coordinate, and name of the feature (should match with phenotype columns names). The files should have a header but the column names will be ignored. An example has been provided ('Example_coordinate_file.txt').
 
 
 
 ### Provided software and data
 
-1. 	fusion_twas-master - This contains all the fusion scripts and the 1KG reference released by FUSION.
+* fusion_twas-master - This contains all the fusion scripts and the 1KG reference released by FUSION.
 
-2. 	plink2 - PLINK v1.90b5.4
+* plink2 - PLINK v1.90b5.4
 
-3. 	gcta_nr_robust - GCTA binary released by FUSION that enables robust non-linear optimization.
+* gcta_nr_robust - GCTA binary released by FUSION that enables robust non-linear optimization.
 
-4. 	gemma.97.sh - GEMMA v0.97 binary in a wrapper that selects the correct compiler on ROCKS.
+* gemma.97.sh - GEMMA v0.97 binary in a wrapper that selects the correct compiler on ROCKS.
 
-5. 	OP_fusion_ref_overlap_checker.R - A script that reads in the FUSION reference, the target sample bim file, and produces a summary of the overlap.
+  
 
-6. 	OP_TWAS_weights_using_fusion.R - Prepares and inputs the genotypic and phenotype data for the FUSION.compute_weights.R script. This script 1) extracts the phenotype data for the specified feature and puts it into a PLINK phenotype file, 2) creates PLINK genotype files that only contains SNPs within the feature region +/-0.5Mb and are present in the FUSION 1KG reference, 3) inserts the feature specific phenotype data into the PLINK files, 4) inputs the PLINK files into the FUSION.compute_weights.R script, specifying the default settings (Note: BSLMM disabled), and 5) deletes the temporary files if the job completes.
+* OP_fusion_ref_overlap_checker.R - A script that reads in the FUSION reference, the target sample bim file, and produces a summary of the overlap.
 
-7. 	OP_TWAS_weights_using_fusion.sh - A shell script for OP_TWAS_weights_using_fusion.R that allows all features to be run in an array.
+* OP_TWAS_weights_using_fusion.R - Prepares and inputs the genotypic and phenotype data for the FUSION.compute_weights.R script. This script 1) extracts the phenotype data for the specified feature and puts it into a PLINK phenotype file, 2) creates PLINK genotype files that only contains SNPs within the feature region +/-0.5Mb and are present in the FUSION 1KG reference, 3) inserts the feature specific phenotype data into the PLINK files, 4) inputs the PLINK files into the FUSION.compute_weights.R script, specifying the default settings (Note: BSLMM disabled), and 5) deletes the temporary files if the job completes.
 
-8. 	OP_packaging_fusion_weights.R- Creates folder containing SNP-weights in the same format as the FUSION released SNP-weights.
+* OP_TWAS_weights_using_fusion.sh - A shell script for OP_TWAS_weights_using_fusion.R that allows all features to be run in an array.
+
+* OP_packaging_fusion_weights.R- Creates folder containing SNP-weights in the same format as the FUSION released SNP-weights.
 
 
 
