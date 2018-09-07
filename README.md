@@ -129,7 +129,8 @@ qsub -cwd -b y -l h_vmem=5G,mem_free=5G -e /dev/null -o /dev/null Rscript ./OP_T
 
 ```sh
 # Use the shell script 'OP_TWAS_weights_using_fusion.sh' to submit each job in an array
-qsub -t 2-$(wc -l ${coordinate_file} | cut -d' ' -f1) -cwd -b y -l h_vmem=5G,mem_free=5G -e /dev/null -o /dev/null ./OP_TWAS_weights_using_fusion.sh \
+# Or run the script for all features in an array.
+qsub -t 2-$(wc -l ${coordinate_file} | cut -d' ' -f1) -N weights_calc -cwd -b y -l h_vmem=5G,mem_free=5G -e /dev/null -o /dev/null ./OP_TWAS_weights_using_fusion.sh \
 --PLINK_prefix ${target_plink} \
 --phenotype_file ${phenotype_file} \
 --coordinate_file ${coordinate_file} \
@@ -140,9 +141,26 @@ qsub -t 2-$(wc -l ${coordinate_file} | cut -d' ' -f1) -cwd -b y -l h_vmem=5G,mem
 --fusion_software ${fusion_software} \
 --output_dir ${output}
 
-# Check that the jobs didn't crash. You can use qacct to idenitfy crashed jobs.
-# e.g. qacct -j 405301 | grep 'taskid\|failed'
-# Then re-run jobs that failed.
+# Check that the jobs didn't crash. Could use qacct to idenitfy crashed jobs.
+# Identify which job IDs failed and create a coordinates file only containing these features.
+paste <(qacct -j weights_calc | grep 'taskid') <(qacct -j weights_calc | grep 'failed') | tr -s ' ' | cut -d ' ' -f 2,4 | awk -F" " '$2 != "0" { print $1 }' > failed
+cat <(head -n 1 ${coordinate_file}) <(awk 'NR==FNR{ pos[$1]; next }FNR in pos' failed ${coordinate_file}) > rerun_coordinate_file
+
+# Re-run scripts for features that crashed. Change the job name so they can be distinguished from the previous set of jobs.
+qsub -t 2-$(wc -l rerun_coordinate_file | cut -d' ' -f1) -N weights_calc_2 -cwd -b y -l h_vmem=5G,mem_free=5G -e /dev/null -o /dev/null ./OP_TWAS_weights_using_fusion.sh \
+--PLINK_prefix ${target_plink} \
+--phenotype_file ${phenotype_file} \
+--coordinate_file rerun_coordinate_file \
+--plink ${plink} \
+--gcta ${gcta} \
+--gemma ${gemma} \
+--ld_ref_dir ${fusion_ldref} \
+--fusion_software ${fusion_software} \
+--output_dir ${output}
+
+# Check again until there are no crashed jobs
+paste <(qacct -j weights_calc_2 | grep 'taskid') <(qacct -j weights_calc_2 | grep 'failed') | tr -s ' ' | cut -d ' ' -f 2,4 | awk -F" " '$2 != "0" { print $1 }' > failed
+
 ```
 
 
