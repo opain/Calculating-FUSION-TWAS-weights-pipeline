@@ -10,6 +10,16 @@ option_list = list(
               help="File name for coordinates of genes/transcripts [required]"),
   make_option("--gene_name", action="store", default=NA, type='character',
               help="Name of gene or transcript to be processed [required]"),
+  make_option("--plink", action="store", default=NA, type='character',
+              help="Path to PLINK [required]"),
+  make_option("--gcta", action="store", default=NA, type='character',
+              help="Path to gcta_nr_robust binary [required]"),
+  make_option("--gemma", action="store", default=NA, type='character',
+              help="Path to gemma binary [required]"),
+  make_option("--ld_ref_dir", action="store", default=NA, type='character',
+              help="FUSION LD reference directory [required]"),
+  make_option("--fusion_software", action="store", default=NA, type='character',
+              help="FUSION software directory [required]"),
   make_option("--output_dir", action="store", default=NA, type='character',
               help="Directory name for the output [required]")
 )
@@ -34,10 +44,10 @@ Start <- 0
 
 # Extract gene from phenotype file
 system(paste('mkdir ',opt$output_dir,'/temp',sep=''))
-system(paste('awk -f /home/mpmop/Software/Scripts/t.awk c1=FID c2=IID c3=',opt$gene_name,' ',opt$phenotype_file,' > ',opt$output_dir,'/temp/temp_',opt$gene_name,'.pheno',sep=''))
+system(paste('awk -f ./t.awk c1=FID c2=IID c3=',opt$gene_name,' ',opt$phenotype_file,' > ',opt$output_dir,'/temp/temp_',opt$gene_name,'.pheno',sep=''))
 
 # Using PLINK, extract variants within the specified gene +/- 500kb from start and stop coordinates
-err_1<-system(paste('/share/apps/plink2 --bfile ',opt$PLINK_prefix,' --make-bed --pheno ',opt$output_dir,'/temp/temp_',opt$gene_name,'.pheno', ' --out ', opt$output_dir,'/temp/temp_',opt$gene_name,' --chr ',CHR,' --from-bp ',Start,' --to-bp ',Stop,' --extract /home/mpmop/Software/fusion_twas-master/LDREF/1000G.EUR.',CHR,'.bim', sep=''))
+err_1<-system(paste(opt$plink,' --bfile ',opt$PLINK_prefix,' --make-bed --pheno ',opt$output_dir,'/temp/temp_',opt$gene_name,'.pheno', ' --out ', opt$output_dir,'/temp/temp_',opt$gene_name,' --chr ',CHR,' --from-bp ',Start,' --to-bp ',Stop,' --extract ',opt$ld_ref_dir,'/1000G.EUR.',CHR,'.bim', sep=''))
 if (err_1 == 13) {
 write.table('No SNPs within gene +/- 0.5Mb', paste(opt$output_dir,'/Output/',opt$gene_name,'.err',sep=''), col.names=F, row.names=F, quote=F)
 } else {
@@ -45,7 +55,7 @@ write.table('No SNPs within gene +/- 0.5Mb', paste(opt$output_dir,'/Output/',opt
 # Using FUSION, calculate the weights for the genes expression using subset of genotypic data.
 setwd(paste(opt$output_dir,'/temp', sep=''))
 system(paste('ln -s ./ output', sep=''))
-system(paste('Rscript ',root_dir,'/fusion_twas-master/FUSION.compute_weights.R --bfile ', opt$output_dir,'/temp/temp_',opt$gene_name,' --tmp temp_',opt$gene_name,'.tmp --out ', opt$output_dir,'/Output/',opt$gene_name,' --verbose 0 --save_hsq --PATH_gcta ',root_dir,'/gcta_nr_robust --PATH_gemma ',root_dir,'/gemma.97.sh --PATH_plink ',root_dir,'/plink2',' --models top1,blup,lasso,enet', sep=''))
+system(paste('Rscript ',opt$fusion_software,'/FUSION.compute_weights.R --bfile ', opt$output_dir,'/temp/temp_',opt$gene_name,' --tmp temp_',opt$gene_name,'.tmp --out ', opt$output_dir,'/Output/',opt$gene_name,' --verbose 0 --save_hsq --PATH_gcta ',opt$gcta,' --PATH_gemma ',opt$gemma,' --PATH_plink ',opt$plink,' --models top1,blup,lasso,enet', sep=''))
 }
 
 # Delete the temporary files

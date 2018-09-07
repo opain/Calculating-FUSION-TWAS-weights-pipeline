@@ -14,25 +14,35 @@ This pipeline is to create SNP-weights that can be used in TWAS using FUSION. I 
 
 
 
-### Provided software and data
+### Required software
 
-* fusion_twas-master - This contains all the fusion scripts and the 1KG reference released by FUSION.
+* R and the required packages:
 
-* plink2 - PLINK v1.90b5.4
+```R
+install.packages(c('data.table','optparse','foreach','doMC'))
+```
 
-* gcta_nr_robust - GCTA binary released by FUSION that enables robust non-linear optimization.
+* FUSION software:
 
-* gemma.97.sh - GEMMA v0.97 binary in a wrapper that selects the correct compiler on ROCKS. NOTE: You may need to change the file path to the gemma binary so it can find the file regardless of the working directory. 
+```sh
+git clone https://github.com/gusevlab/fusion_twas.git
+```
+* FUSION LD reference data ([download](https://data.broadinstitute.org/alkesgroup/FUSION/LDREF.tar.bz2))
 
-  
+* [GEMMA 0.97 software](https://github.com/genetics-statistics/GEMMA)
 
-* OP_fusion_ref_overlap_checker.R - A script that reads in the FUSION reference, the target sample bim file, and produces a summary of the overlap.
+  * Note: ROCKS users at Cardiff need to create a shell which specifies the correct compiler (see [example](http://gitlab.psycm.cf.ac.uk/mpmop/Calculating-FUSION-TWAS-weights-pipeline/blob/master/gemma.97.sh))
 
-* OP_TWAS_weights_using_fusion.R - Prepares and inputs the genotypic and phenotype data for the FUSION.compute_weights.R script. This script 1) extracts the phenotype data for the specified feature and puts it into a PLINK phenotype file, 2) creates PLINK genotype files that only contains SNPs within the feature region +/-0.5Mb and are present in the FUSION 1KG reference, 3) inserts the feature specific phenotype data into the PLINK files, 4) inputs the PLINK files into the FUSION.compute_weights.R script, specifying the default settings (Note: BSLMM disabled), and 5) deletes the temporary files if the job completes.
+    
 
-* OP_TWAS_weights_using_fusion.sh - A shell script for OP_TWAS_weights_using_fusion.R that allows all features to be run in an array.
+### Provided software
 
-* OP_packaging_fusion_weights.R- Creates folder containing SNP-weights in the same format as the FUSION released SNP-weights.
+| Name                            | Description                                                  |
+| ------------------------------- | ------------------------------------------------------------ |
+| OP_fusion_ref_overlap_checker.R | A script that reads in the FUSION reference, the target sample .bim file, and produces a summary of the overlap. |
+| OP_TWAS_weights_using_fusion.R  | Prepares and inputs the genotypic and phenotype data for the FUSION.compute_weights.R script. This script: 1) extracts the phenotype data for the specified feature and puts it into a PLINK phenotype file, 2) creates PLINK genotype files that only contains SNPs within the feature region +/-0.5Mb and are present in the FUSION 1KG reference, 3) inserts the feature specific phenotype data into the PLINK files, 4) inputs the PLINK files into the FUSION.compute_weights.R script, specifying the default settings (Note: BSLMM disabled), and 5) deletes the temporary files if the job completes. |
+| OP_TWAS_weights_using_fusion.sh | A shell script for OP_TWAS_weights_using_fusion.R that allows all features to be run in an array. |
+| OP_packaging_fusion_weights.R   | Creates folder containing SNP-weights in the same format as the FUSION released SNP-weights. |
 
 
 
@@ -40,42 +50,54 @@ This pipeline is to create SNP-weights that can be used in TWAS using FUSION. I 
 
 ### 0 - Set working directory and create required variables
 
-```
+```sh
+# Download this gitlab repository as .tar.gz
 # Decompress 'Calculating-FUSION-TWAS-weights-pipeline.tar.gz'
 tar -xzf Calculating-FUSION-TWAS-weights-pipeline.tar.gz
 
 # Set the working directory to the folder 'Calculating-FUSION-TWAS-weights-pipeline'
 cd Calculating-FUSION-TWAS-weights-pipeline
 
-# Create a directory for the output
-mkdir <Desired name of output directory>
-
-# Create 'target_plink' variable containing prefix to PLINK files
-target_plink= <Path to prefix of PLINK files>
-
-# Create 'phenotype_file' variable containing phenotypic data
-phenotype_file= <Path to file containing phenotypic data>
-
-# Create 'coordinate_file' variable containing coordinates of each feature data
-coordinate_file= <Path to file containing coordinate data>
-
-# Create 'output' variable containing the directory name for the various outputs
-output= <Name of the previously created output directory>
-
 # Give permissions to fetal_weights_using_fusion-full_sample-gene.R.sh
 chmod a+x fetal_weights_using_fusion-full_sample-gene.R.sh
 
+# Create a directory for the output
+mkdir <Desired name of output directory>
+
+# Create the following variables
+target_plink=<Path to prefix of PLINK files>
+phenotype_file=<Path to file containing phenotypic data>
+coordinate_file=<Path to file containing feature coordinate data>
+fusion_ldref=<Path to folder containing fusion ld reference>
+plink=<Path to plink binary>
+gemma=<Path to gemma binary>
+gcta=<Path to gcta_nr_robust binary>
+output=<Name of the previously created output directory>
+
+# For example, only account it could like this
+cd /home/mpmop/Calculating-FUSION-TWAS-weights-pipeline
+chmod a+x ./OP_TWAS_weights_using_fusion.sh
+mkdir pipe_test
+target_plink=/home/mpmop/Data/Heath/Fetal_all/genotypes
+phenotype_file=/home/mpmop/Analyses/Fetal_GeneX_weights/Clean/GeneX/GeneX_norm_resid.pheno
+coordinate_file=/home/mpmop/Analyses/Fetal_GeneX_weights/Clean/GeneX/Gene_locations.txt
+fusion_ldref=/home/mpmop/Software/fusion_twas-master/LDREF
+fusion_software=/home/mpmop/Software/fusion_twas-master
+plink=/share/apps/plink2
+gemma=/home/mpmop/Software/gemma.97.sh
+gcta=/home/mpmop/Software/fusion_twas-master/gcta_nr_robust
+output=/home/mpmop/Calculating-FUSION-TWAS-weights-pipeline/pipe_test
 ```
 
 
 
 ### 1. Check the percentage of SNPs in the FUSION LD reference available in the target data
 
-```
+```sh
 Rscript ./OP_fusion_ref_overlap_checker.R \
---ld_ref_dir ./fusion_twas-master/LDREF \
---PLINK_prefix ${target_plink} \
---output ${output}/overlap.txt
+    --ld_ref_dir ./fusion_twas-master/LDREF \
+    --PLINK_prefix ${target_plink} \
+    --output ${output}/overlap.txt
 ```
 
 
@@ -84,7 +106,7 @@ Rscript ./OP_fusion_ref_overlap_checker.R \
 
 ##### - If you only want to create weights for one of the features in your phenotype file: 
 
-```
+```sh
 # Assign the name of the feature to a variable called feature_name
 feature_name=<Name of the feature>
 
@@ -94,17 +116,28 @@ qsub -cwd -b y -l h_vmem=5G,mem_free=5G -e /dev/null -o /dev/null Rscript ./OP_T
 --phenotype_file ${phenotype_file} \
 --coordinate_file ${coordinate_file} \
 --gene_name ${feature_name} \
+--plink ${plink} \
+--gcta ${gcta} \
+--gemma ${gemma} \
+--ld_ref_dir ${fusion_ldref} \
+--fusion_software ${fusion_software} \
 --output_dir ${output}
+
 ```
 
 ##### - If you want to calculate weights for all features in your phenotype file:
 
-```
+```sh
 # Use the shell script 'OP_TWAS_weights_using_fusion.sh' to submit each job in an array
-qsub -t 2-$(wc -l ${coordinate_file} | cut -d' ' -f1) -cwd -b y -l h_vmem=5G,mem_free=5G -e /dev/null -o /dev/null ./OP_TWAS_weights_using_fusion.sh \
+qsub -t 1-200 -cwd -b y -l h_vmem=5G,mem_free=5G ./OP_TWAS_weights_using_fusion.sh \
 --PLINK_prefix ${target_plink} \
 --phenotype_file ${phenotype_file} \
 --coordinate_file ${coordinate_file} \
+--plink ${plink} \
+--gcta ${gcta} \
+--gemma ${gemma} \
+--ld_ref_dir ${fusion_ldref} \
+--fusion_software ${fusion_software} \
 --output_dir ${output}
 
 # Check that the jobs didn't crash. You can use qacct to idenitfy crashed jobs.
@@ -116,7 +149,7 @@ qsub -t 2-$(wc -l ${coordinate_file} | cut -d' ' -f1) -cwd -b y -l h_vmem=5G,mem
 
 ### 3. Create folder containing SNP-weights in the same format as the FUSION released SNP-weights
 
-```
+```sh
 Rscript ./OP_packaging_fusion_weights.R \
 --RDat_dir ${output}/Output \
 --coordinate_file ${coordinate_file} \
