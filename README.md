@@ -129,7 +129,7 @@ qsub -cwd -b y -l h_vmem=5G,mem_free=5G -e /dev/null -o /dev/null Rscript ./OP_T
 
 ```sh
 # Use the shell script 'OP_TWAS_weights_using_fusion.sh' to submit each job in an array
-qsub -t 1-200 -cwd -b y -l h_vmem=5G,mem_free=5G ./OP_TWAS_weights_using_fusion.sh \
+qsub -t 2-$(wc -l ${coordinate_file} | cut -d' ' -f1) -cwd -b y -l h_vmem=5G,mem_free=5G -e /dev/null -o /dev/null ./OP_TWAS_weights_using_fusion.sh \
 --PLINK_prefix ${target_plink} \
 --phenotype_file ${phenotype_file} \
 --coordinate_file ${coordinate_file} \
