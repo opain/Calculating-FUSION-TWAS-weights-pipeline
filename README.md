@@ -181,7 +181,7 @@ Rscript ./OP_packaging_fusion_weights.R \
 
 This script was written by Dr Oliver Pain under the supervision of Dr Richard Anney whilst at the MRC Centre for Neuropsychiatric Genetics and Genomics, Cardiff University.
 
-If you have any questions or comments please email Ollie (paino@cardiff.ac.uk).
+If you have any questions or comments use the [google group](https://groups.google.com/forum/#!forum/twas-related-r-scripts).
 
 
 
