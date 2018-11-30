@@ -33,7 +33,7 @@ git clone https://github.com/gusevlab/fusion_twas.git
 
   * Note: ROCKS users at Cardiff need to create a shell which specifies the correct compiler (see [example](http://gitlab.psycm.cf.ac.uk/mpmop/Calculating-FUSION-TWAS-weights-pipeline/blob/master/gemma.97.sh))
 
-    
+
 
 ### Provided software
 
@@ -59,7 +59,7 @@ tar -xzf Calculating-FUSION-TWAS-weights-pipeline.tar.gz
 cd Calculating-FUSION-TWAS-weights-pipeline
 
 # Give permissions to fetal_weights_using_fusion-full_sample-gene.R.sh
-chmod a+x fetal_weights_using_fusion-full_sample-gene.R.sh
+chmod a+x OP_TWAS_weights_using_fusion.sh
 
 # Create a directory for the output
 mkdir <Desired name of output directory>
@@ -74,7 +74,7 @@ gemma=<Path to gemma binary>
 gcta=<Path to gcta_nr_robust binary>
 output=<Name of the previously created output directory>
 
-# For example, only account it could like this
+# For example, it could like this
 cd /home/mpmop/Calculating-FUSION-TWAS-weights-pipeline
 chmod a+x ./OP_TWAS_weights_using_fusion.sh
 mkdir pipe_test
@@ -104,7 +104,7 @@ Rscript ./OP_fusion_ref_overlap_checker.R \
 
 ### 2. Run script that prepares and inputs the genotypic and phenotype data for the FUSION.compute_weights.R script.
 
-##### - If you only want to create weights for one of the features in your phenotype file: 
+##### - If you only want to create weights for one of the features in your phenotype file:
 
 ```sh
 # Assign the name of the feature to a variable called feature_name
@@ -182,10 +182,3 @@ Rscript ./OP_packaging_fusion_weights.R \
 This script was written by Dr Oliver Pain under the supervision of Dr Richard Anney whilst at the MRC Centre for Neuropsychiatric Genetics and Genomics, Cardiff University.
 
 If you have any questions or comments use the [google group](https://groups.google.com/forum/#!forum/twas-related-r-scripts).
-
-
-
-
-
-
-
