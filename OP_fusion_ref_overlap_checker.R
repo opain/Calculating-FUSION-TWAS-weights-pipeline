@@ -5,7 +5,9 @@ option_list = list(
   make_option("--ld_ref_dir", action="store", default=NA, type='character',
               help="Directory where FUSION LD reference files are stored [required]"),
   make_option("--PLINK_prefix", action="store", default=NA, type='character',
-              help="Prefix of PLINK files for the target sample [required]"),
+              help="Prefix of PLINK files for the target sample [optional]"),
+  make_option("--PLINK_prefix_chr", action="store", default=NA, type='character',
+              help="Prefix of per chromosome PLINK files for the target sample [optional]"),
   make_option("--output", action="store", default=NA, type='character',
               help="File name for the output [required]")
 )
@@ -19,8 +21,15 @@ temp = list.files(pattern="*.bim")
 
 Ref<-do.call(rbind, lapply(temp, function(x) data.frame(fread(x))))
 
-# Read in the SNPs in CLOZUK
-Target<-data.frame(fread(paste(opt$PLINK_prefix,'.bim',sep='')))
+# Read in the SNPs in target
+if(!is.na(opt$PLINK_prefix)){
+	Target<-data.frame(fread(paste(opt$PLINK_prefix,'.bim',sep='')))
+} else {
+	Target<-NULL
+	for(i in 1:22){
+		Target<-rbind(Target, fread(paste(opt$PLINK_prefix_chr,i,'.bim',sep='')))
+	}
+}
 
 # Get intersect of the two based on RSID
 Overlap<-intersect(Ref$V2, Target$V2)

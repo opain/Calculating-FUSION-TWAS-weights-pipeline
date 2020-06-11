@@ -32,7 +32,8 @@ pos_temp<-data.frame(	WGT=temp_withPath,
 						ID=gsub('.wgt.RDat','',gsub('Fetal_','',temp)))
 
 Gene_coordinates_file<-read.table(opt$coordinate_file, header=T, stringsAsFactors=F)
-
+names(Gene_coordinates_file)<-c('CHR','start','end','ID')
+  
 pos_temp_2<-merge(pos_temp, Gene_coordinates_file[1:4], by='ID')
 names(pos_temp_2)<-c('ID','WGT','CHR','P0','P1')
 pos_temp_2<-pos_temp_2[c('WGT','ID','CHR','P0','P1')]
@@ -57,24 +58,26 @@ profile_temp<-data.frame(	ID=gsub('.wgt.RDat','',temp),
 							lasso.pv=NA)
 
 for(i in 1:length(temp)){
-load(paste(opt$RDat_dir,'/',temp[i], sep=''))
-profile_temp$nsnps[i]<-dim(snps)[1]
-profile_temp$hsq[i]<-hsq[1]
-profile_temp$hsq.se[i]<-hsq[2]
-profile_temp$hsq.pv[i]<-hsq.pv
-
-cv.performance<-data.frame(cv.performance)
-
-profile_temp$top1.r2[i]<-cv.performance$top1[1]
-profile_temp$blup.r2[i]<-cv.performance$blup[1]
-profile_temp$enet.r2[i]<-cv.performance$enet[1]
-profile_temp$lasso.r2[i]<-cv.performance$lasso[1]
-
-profile_temp$top1.pv[i]<-cv.performance$top1[2]
-profile_temp$blup.pv[i]<-cv.performance$blup[2]
-profile_temp$enet.pv[i]<-cv.performance$enet[2]
-profile_temp$lasso.pv[i]<-cv.performance$lasso[2]
-
+  print(i)
+  load(paste(opt$RDat_dir,'/',temp[i], sep=''))
+  profile_temp$nsnps[i]<-dim(snps)[1]
+  profile_temp$hsq[i]<-hsq[1]
+  profile_temp$hsq.se[i]<-hsq[2]
+  profile_temp$hsq.pv[i]<-hsq.pv
+  
+  cv.performance<-data.frame(cv.performance)
+  
+  profile_temp$top1.r2[i]<-cv.performance$top1[1]
+  profile_temp$blup.r2[i]<-cv.performance$blup[1]
+  profile_temp$bslmm.r2[i]<-cv.performance$bslmm[1]
+  profile_temp$enet.r2[i]<-cv.performance$enet[1]
+  profile_temp$lasso.r2[i]<-cv.performance$lasso[1]
+  
+  profile_temp$top1.pv[i]<-cv.performance$top1[2]
+  profile_temp$blup.pv[i]<-cv.performance$blup[2]
+  profile_temp$bslmm.pv[i]<-cv.performance$bslmm[2]
+  profile_temp$enet.pv[i]<-cv.performance$enet[2]
+  profile_temp$lasso.pv[i]<-cv.performance$lasso[2]
 }
 
 write.table(profile_temp,paste(opt$output_dir,'/',opt$output_name,'.profile',sep=''), col.names=T, row.names=F, quote=F)
@@ -99,7 +102,7 @@ R2\tSE
 top1\t',round(mean(profile_temp$top1.r2),3),'\t',round(se(profile_temp$top1.r2),5),'
 blup\t',round(mean(profile_temp$blup.r2),3),'\t',round(se(profile_temp$blup.r2),5),'
 enet\t',round(mean(profile_temp$enet.r2),3),'\t',round(se(profile_temp$enet.r2),5),'
-bslmm\t',NA,'\t',NA,'
+bslmm\t',round(mean(profile_temp$bslmm.r2),3),'\t',round(se(profile_temp$bslmm.r2),5),'
 lasso\t',round(mean(profile_temp$lasso.r2),3),'\t',round(se(profile_temp$lasso.r2),5),'
 BEST\t',round(max(BEST_r2),3),'
 
@@ -107,7 +110,7 @@ BEST\t',round(max(BEST_r2),3),'
 top1:\t',round(sum(!is.na(profile_temp_r2$top1.r2))/length(profile_temp_r2$top1.r2)*100,1),'%
 blup:\t',round(sum(!is.na(profile_temp_r2$blup.r2))/length(profile_temp_r2$blup.r2)*100,1),'%
 enet:\t',round(sum(!is.na(profile_temp_r2$enet.r2))/length(profile_temp_r2$enet.r2)*100,1),'%
-bslmm:\t',NaN,'%
+bslmm:\t',round(sum(!is.na(profile_temp_r2$bslmm.r2))/length(profile_temp_r2$bslmm.r2)*100,1),'%
 lasso:\t',round(sum(!is.na(profile_temp_r2$lasso.r2))/length(profile_temp_r2$lasso.r2)*100,1),'%\n', sep='')
 sink()
 

@@ -1,0 +1,115 @@
+mkdir: cannot create directory ‘/users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/Output’: File exists
+mkdir: cannot create directory ‘/users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/temp’: File exists
+PLINK v1.90b6.16 64-bit (19 Feb 2020)          www.cog-genomics.org/plink/1.9/
+(C) 2005-2020 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to /users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/temp/temp_f.30710.0.0.log.
+Options in effect:
+  --bfile /users/k1806347/brc_scratch/Data/UKBB/Genotype/Harmonised/UKBB.w_hm3.QCd.AllSNP.chr1
+  --chr 1
+  --extract /scratch/groups/biomarkers-brc-mh/TWAS_resource/FUSION/LDREF/1000G.EUR.1.bim
+  --from-bp 159182079
+  --geno 0.02
+  --make-bed
+  --out /users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/temp/temp_f.30710.0.0
+  --pheno /users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/temp/temp_f.30710.0.0.pheno
+  --to-bp 160184379
+
+193033 MB RAM detected; reserving 96516 MB for main workspace.
+530 out of 100477 variants loaded from .bim file.
+487409 people (0 males, 0 females, 487409 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to
+/users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/temp/temp_f.30710.0.0.nosex
+.
+365812 phenotype values present after --pheno.
+--extract: 523 variants remaining.
+Warning: Ignoring phenotypes of missing-sex samples.  If you don't want those
+phenotypes to be ignored, use the --allow-no-sex flag.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 487409 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.985468.
+107 variants removed due to missing genotype data (--geno).
+416 variants and 487409 people pass filters and QC.
+Phenotype data is quantitative.
+--make-bed to
+/users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/temp/temp_f.30710.0.0.bed
++
+/users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/temp/temp_f.30710.0.0.bim
++
+/users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/temp/temp_f.30710.0.0.fam
+... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+ln: failed to create symbolic link ‘output/.’: File exists
+PLINK v1.90b6.16 64-bit (19 Feb 2020)          www.cog-genomics.org/plink/1.9/
+(C) 2005-2020 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to temp_f.30710.0.0.tmp.log.
+Options in effect:
+  --allow-no-sex
+  --bfile /users/k1806347/brc_scratch/Data/UKBB/Biomarkers/FUSION/SNP-weights/temp/temp_f.30710.0.0
+  --keep temp_f.30710.0.0.tmp.pheno
+  --make-bed
+  --out temp_f.30710.0.0.tmp
+  --pheno temp_f.30710.0.0.tmp.pheno
+
+193033 MB RAM detected; reserving 96516 MB for main workspace.
+416 variants loaded from .bim file.
+487409 people (0 males, 0 females, 487409 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to temp_f.30710.0.0.tmp.nosex .
+365812 phenotype values present after --pheno.
+--keep: 487409 people remaining.
+Using 1 thread (no multithreaded calculations invoked).
+Before main variant filters, 487409 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994466.
+416 variants and 487409 people pass filters and QC.
+Phenotype data is quantitative.
+--make-bed to temp_f.30710.0.0.tmp.bed + temp_f.30710.0.0.tmp.bim +
+temp_f.30710.0.0.tmp.fam ... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99%done.
+### Estimating heritability
+PLINK v1.90b6.16 64-bit (19 Feb 2020)          www.cog-genomics.org/plink/1.9/
+(C) 2005-2020 Shaun Purcell, Christopher Chang   GNU General Public License v3
+Logging to temp_f.30710.0.0.tmp.log.
+Options in effect:
+  --allow-no-sex
+  --bfile temp_f.30710.0.0.tmp
+  --make-grm-bin
+  --out temp_f.30710.0.0.tmp
+
+193033 MB RAM detected; reserving 96516 MB for main workspace.
+416 variants loaded from .bim file.
+487409 people (0 males, 0 females, 487409 ambiguous) loaded from .fam.
+Ambiguous sex IDs written to temp_f.30710.0.0.tmp.nosex .
+365812 phenotype values loaded from .fam.
+Using up to 19 threads (change this with --threads).
+Before main variant filters, 487409 founders and 0 nonfounders present.
+Calculating allele frequencies... 0%1%2%3%4%5%6%7%8%9%10%11%12%13%14%15%16%17%18%19%20%21%22%23%24%25%26%27%28%29%30%31%32%33%34%35%36%37%38%39%40%41%42%43%44%45%46%47%48%49%50%51%52%53%54%55%56%57%58%59%60%61%62%63%64%65%66%67%68%69%70%71%72%73%74%75%76%77%78%79%80%81%82%83%84%85%86%87%88%89%90%91%92%93%94%95%96%97%98%99% done.
+Total genotyping rate is 0.994466.
+416 variants and 487409 people pass filters and QC.
+Phenotype data is quantitative.
+
+Error: Out of memory.  The --memory flag may be helpful.
+Failed allocation size: 475134091776
+*******************************************************************
+* Genome-wide Complex Trait Analysis (GCTA)
+* version 1.21
+* (C) 2010 Jian Yang, Hong Lee, Michael Goddard and Peter Visscher
+* The University of Queensland
+*******************************************************************
+Analysis started: Sun May 10 10:19:45 2020
+
+Options:
+--grm temp_f.30710.0.0.tmp
+--pheno temp_f.30710.0.0.tmp.pheno
+--out temp_f.30710.0.0.tmp
+--reml
+--reml-no-constrain
+--reml-lrt 1 
+
+Note: This is a multi-thread program. You could specify the number of threads by the --thread-num option to speed up the computation if there are multiple processors in your machine.
+
+Reading IDs of the GRM from [temp_f.30710.0.0.tmp.grm.id].
+
+Error: can not open the file [temp_f.30710.0.0.tmp.grm.id] to read.
+
+Analysis finished: Sun May 10 10:19:45 2020
+Computational time: 0:0:0
+temp_f.30710.0.0.tmp does not exist, likely GCTA could not converge, skipping gene
