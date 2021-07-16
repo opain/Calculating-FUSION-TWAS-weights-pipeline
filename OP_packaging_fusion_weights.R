@@ -21,8 +21,7 @@ system(paste('mkdir -p ',opt$output_dir,'/',opt$output_name,sep=''))
 system(paste('cp ',opt$RDat_dir,'/*.RDat ',opt$output_dir,'/',opt$output_name,'/',sep=''))
 
 # Create file containing a list of the .wgt.RDat files
-setwd(opt$RDat_dir)
-temp = list.files(pattern="*.RDat")
+temp = list.files(path=opt$RDat_dir, pattern="*.RDat")
 temp_withPath<-paste(opt$output_name,'/', temp, sep='')
 
 write.table(temp_withPath, paste(opt$output_dir,'/',opt$output_name,'.list',sep=''), col.names=F, row.names=F, quote=F)
