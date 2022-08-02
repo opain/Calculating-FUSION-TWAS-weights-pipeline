@@ -39,8 +39,6 @@ pos_temp_2<-pos_temp_2[c('WGT','ID','CHR','P0','P1')]
 
 pos_temp_2_sort<-pos_temp_2[order(pos_temp_2$CHR,pos_temp_2$P0),]
 
-write.table(pos_temp_2_sort, paste(opt$output_dir,'/',opt$output_name,'.pos',sep=''), col.names=T, row.names=F, quote=F)
-
 # Create a file containing the Gene ID, nsnps, hsq, hsq.se, hsq.pv, top1.r2, blup.r2, enet.r2, bslmm.r2, lasso.r2, top1.pv, blup.pv, enet.pv, bslmm.pv and lasso.pv (.profile)
 profile_temp<-data.frame(	ID=gsub('.wgt.RDat','',temp),
 							nsnps=NA,
@@ -56,9 +54,12 @@ profile_temp<-data.frame(	ID=gsub('.wgt.RDat','',temp),
 							enet.pv=NA,
 							lasso.pv=NA)
 
+pos_temp_2_sort$N<-NA
+
 for(i in 1:length(temp)){
   print(i)
-  load(paste(opt$RDat_dir,'/',temp[i], sep=''))
+  load(paste(opt$RDat_dir,'/',pos_temp_2_sort$ID[i],'.wgt.RDat', sep=''))
+  pos_temp_2_sort$N[[i]]<-N.tot
   profile_temp$nsnps[i]<-dim(snps)[1]
   profile_temp$hsq[i]<-hsq[1]
   profile_temp$hsq.se[i]<-hsq[2]
@@ -78,6 +79,8 @@ for(i in 1:length(temp)){
   profile_temp$enet.pv[i]<-cv.performance$enet[2]
   profile_temp$lasso.pv[i]<-cv.performance$lasso[2]
 }
+
+write.table(pos_temp_2_sort, paste(opt$output_dir,'/',opt$output_name,'.pos',sep=''), col.names=T, row.names=F, quote=F)
 
 write.table(profile_temp,paste(opt$output_dir,'/',opt$output_name,'.profile',sep=''), col.names=T, row.names=F, quote=F)
 

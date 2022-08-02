@@ -62,7 +62,7 @@ write.table('No SNPs within gene +/- 0.5Mb', paste(opt$output_dir,'/Output/',opt
 # Using FUSION, calculate the weights for the genes expression using subset of genotypic data.
 setwd(paste(opt$output_dir,'/temp', sep=''))
 system(paste('ln -s ./ output', sep=''))
-system(paste('Rscript ',opt$fusion_software,'/FUSION.compute_weights.R --bfile ', opt$output_dir,'/temp/temp_',opt$gene_name,' --tmp temp_',opt$gene_name,'.tmp --out ', opt$output_dir,'/Output/',opt$gene_name,' --verbose 2 --save_hsq --PATH_gcta ',opt$gcta,' --PATH_gemma ',opt$gemma,' --PATH_plink ',opt$plink,' --models top1,lasso,enet', sep=''))
+system(paste('Rscript ',opt$fusion_software,'/FUSION.compute_weights.R --bfile ', opt$output_dir,'/temp/temp_',opt$gene_name,' --tmp temp_',opt$gene_name,'.tmp --out ', opt$output_dir,'/Output/',opt$gene_name,' --verbose 2 --save_hsq --PATH_gcta ',opt$gcta,' --PATH_gemma ',opt$gemma,' --PATH_plink ',opt$plink,' --models top1,lasso,enet,blup', sep=''))
 }
 
 # Delete the temporary files
