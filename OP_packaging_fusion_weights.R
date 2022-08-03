@@ -35,7 +35,8 @@ names(Gene_coordinates_file)<-c('CHR','start','end','ID')
   
 pos_temp_2<-merge(pos_temp, Gene_coordinates_file[1:4], by='ID')
 names(pos_temp_2)<-c('ID','WGT','CHR','P0','P1')
-pos_temp_2<-pos_temp_2[c('WGT','ID','CHR','P0','P1')]
+pos_temp_2$PANEL<-opt$output_name
+pos_temp_2<-pos_temp_2[c('PANEL','WGT','ID','CHR','P0','P1')]
 
 pos_temp_2_sort<-pos_temp_2[order(pos_temp_2$CHR,pos_temp_2$P0),]
 
